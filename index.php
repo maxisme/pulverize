@@ -139,7 +139,7 @@ $(document).ready(function() {
     <?php }?>
         <br>
         <span style="font-size:40px">Write a self destructing message:</span>
-        <textarea name="content" rows="8"><?php if($_GET["frm"] == "crypter"){ echo "Let's set our password to: ";}?></textarea> 
+        <textarea name="content" rows="8"><?php if($_GET["frm"] == "crypter"){ echo generateRandomString(15);}?></textarea> 
     </div>
     <div align="center">
         <div class="g-recaptcha" data-sitekey="6Le_MhYTAAAAADXTPBXN38FFQ8nBesq-JdzEYOws"></div><br />
