@@ -1,0 +1,38 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>404</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+<style>
+*{
+	font-family: 'Abel', sans-serif;
+	font-size:30px;
+}
+#count{
+	-webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #bc2122;
+	color:#bc2122;
+	font-size:50px;
+}
+</style>
+<script>
+$(document).ready(function(e) {
+	setTimeout(function(){ window.location = "http://⊗.cf/"; }, 5000);
+	var x = 4;
+	setInterval(function(){
+		$("#count").html(x--);
+	},1000);
+});
+
+</script>
+</head>
+
+<body>
+Self destucted...<br><br>
+<div id="count">5</div>
+</body>
+</html>
