@@ -1,3 +1,3 @@
 # pulverize
-Self destructing messages.
+(⊗.cf)[http://⊗.cf] - Self destructing messages.
 
