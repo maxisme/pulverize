@@ -132,19 +132,18 @@ $(document).ready(function() {
 </head>
 
 <body>
-	<form  method="post" action="/" >
-    <div align="center">
-    <?php if($page){?>
-    	<span id='sendLink'>Link to message:<span id="url">⊗.cf/<?php echo $page?></span></span><br /><br />
-    <?php }?>
-        <br>
-        <span style="font-size:40px">Write a self destructing message:</span>
-        <textarea name="content" rows="8"><?php if($_GET["frm"] == "crypter"){ echo "Password: ".generateRandomString(15);}?></textarea> 
-    </div>
-    <div align="center">
-        <div class="g-recaptcha" data-sitekey="6Le_MhYTAAAAADXTPBXN38FFQ8nBesq-JdzEYOws"></div><br />
-        <input type="submit" name="submit" value="Create Link"> 
-        </form>
-    </div>
+	<form method="post" action="/" >
+        <div align="center">
+        <?php if($page){?>
+            <span id='sendLink'>Link to message:<span id="url">⊗.cf/<?php echo $page?></span></span><br /><br />
+        <?php }?>
+            <br>
+            <span style="font-size:40px">Write a self destructing message:</span>
+            <!-- if from crypter.co.uk -->
+            <textarea name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Password: ".generateRandomString(15);}?></textarea> 
+            <div class="g-recaptcha" data-sitekey="6Le_MhYTAAAAADXTPBXN38FFQ8nBesq-JdzEYOws"></div><br />
+            <input type="submit" name="submit" value="Create Link"> 
+        </div>
+    </form>
 </body>
 </html>
