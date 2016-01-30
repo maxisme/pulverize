@@ -81,6 +81,7 @@ if(!strstr($request, "true")){
 <meta name="author" content="Maximilian Mitchell">
 <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<?php include_once("analyticstracking.php") ?>
 <style>
 *{
 	font-family: 'Abel', sans-serif;
