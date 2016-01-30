@@ -14,7 +14,8 @@ if(isset($_POST['submit']))
 	//verify captcha
 	$userIP = $_SERVER["REMOTE_ADDR"];
 	$recaptchaResponse = $_POST['g-recaptcha-response'];
-	$secretKey = "6Le_MhYTAAAAACl8JXVr-8vS5hI75qraJtTQyVGj";
+	$config = parse_ini_file('/var/www/xn--meh.cf/db.ini');
+	$secretKey = $config['secret'];
 	$request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip={$userIP}");
 	
 	if(!strstr($request, "true")){
@@ -25,7 +26,7 @@ if(isset($_POST['submit']))
 		$content = '<?php 
 $userIP = $_SERVER["REMOTE_ADDR"];
 $recaptchaResponse = $_POST[\'g-recaptcha-response\'];
-$secretKey = "6Le_MhYTAAAAACl8JXVr-8vS5hI75qraJtTQyVGj";
+$secretKey = "'.$secretKey.'";
 $request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip={$userIP}");
 
 if(!strstr($request, "true")){
@@ -41,7 +42,7 @@ if(!strstr($request, "true")){
 	<script src=\'https://www.google.com/recaptcha/api.js\'></script>
     Please verify you are not a cheeky robot.
     <form  method="post" action="<?php echo $_SERVER[\'PHP_SELF\']; ?>" >
-        <div class="g-recaptcha" data-sitekey="6Le_MhYTAAAAADXTPBXN38FFQ8nBesq-JdzEYOws"></div>
+        <div class="g-recaptcha" data-sitekey="6LdJ2BYTAAAAAGYoduC0MD58shOV8iftjd5u0vzM"></div>
         <input type="submit" name="submit" value="Submit">
     </form>
     
@@ -112,6 +113,10 @@ input{
 	padding:20px;
 	border:1px dashed #000;
 }
+#git{
+	position:absolute;
+	right:5px;
+}
 </style>
 <script>
 $(document).ready(function() {
@@ -132,16 +137,17 @@ $(document).ready(function() {
 </head>
 
 <body>
+	<div id="git"><a target="_blank" href="https://github.com/maxisme/pulverize"><img src="git.png" height="20px" /></a></div>
 	<form method="post" action="/" >
         <div align="center">
         <?php if($page){?>
             <span id='sendLink'>Link to message:<span id="url">⊗.cf/<?php echo $page?></span></span><br /><br />
         <?php }?>
-            <br>
+            <br> 
             <span style="font-size:40px">Write a self destructing message:</span>
             <!-- if from crypter.co.uk -->
             <textarea name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Password: ".generateRandomString(15);}?></textarea> 
-            <div class="g-recaptcha" data-sitekey="6Le_MhYTAAAAADXTPBXN38FFQ8nBesq-JdzEYOws"></div><br />
+            <div class="g-recaptcha" data-sitekey="6LdJ2BYTAAAAAGYoduC0MD58shOV8iftjd5u0vzM"></div><br />
             <input type="submit" name="submit" value="Create Link"> 
         </div>
     </form>
