@@ -14,12 +14,12 @@ if(isset($_POST['submit']))
 	//verify captcha
 	$userIP = $_SERVER["REMOTE_ADDR"];
 	$recaptchaResponse = $_POST['g-recaptcha-response'];
-	$config = parse_ini_file('/var/www/xn--meh.cf/db.ini');
+	$config = parse_ini_file('/NAS/pulverize.xyz/db.ini');
 	$secretKey = $config['secret'];
 	$request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip={$userIP}");
 	
 	if(!strstr($request, "true")){
-		//echo "<span style='color:#bc2122'>Failed Captcha Verification!</span>";
+		echo "<span style='color:#bc2122'>Failed Captcha Verification!</span>";
 	}else{
 		$page = generateRandomString();
 		$myfile = fopen($page.".php", "w");
@@ -42,7 +42,7 @@ if(!strstr($request, "true")){
 	<script src=\'https://www.google.com/recaptcha/api.js\'></script>
     Please verify you are not a cheeky robot.
     <form  method="post" action="<?php echo $_SERVER[\'PHP_SELF\']; ?>" >
-        <div class="g-recaptcha" data-sitekey="6LdJ2BYTAAAAAGYoduC0MD58shOV8iftjd5u0vzM"></div>
+        <div class="g-recaptcha" data-sitekey="6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk"></div>
         <input type="submit" name="submit" value="Submit">
     </form>
     
@@ -148,7 +148,7 @@ $(document).ready(function() {
             <span style="font-size:40px">Write a self destructing message:</span>
             <!-- if from crypter.co.uk -->
             <textarea name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Password: ".generateRandomString(15);}?></textarea> 
-            <div class="g-recaptcha" data-sitekey="6LdJ2BYTAAAAAGYoduC0MD58shOV8iftjd5u0vzM"></div><br />
+            <div class="g-recaptcha" data-sitekey="6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk"></div><br />
             <input type="submit" name="submit" value="Create Link"> 
         </div>
     </form>
