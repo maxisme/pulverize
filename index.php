@@ -19,7 +19,7 @@ if(isset($_POST['submit']))
 	$request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip={$userIP}");
 	
 	if(!strstr($request, "true")){
-		echo "<span style='color:#bc2122'>Failed Captcha Verification!</span>";
+		//echo "<span style='color:#bc2122'>Failed Captcha Verification!</span>";
 	}else{
 		$page = generateRandomString();
 		$myfile = fopen($page.".php", "w");
@@ -49,7 +49,7 @@ if(!strstr($request, "true")){
 <?php 
 }else{
 	$file = $_SERVER[\'PHP_SELF\'];
-	if($file != "index.php" && unlink(\'/var/www/xn--meh.cf/public_html\'.$file)){ 
+	if($file != "index.php" && unlink("/NAS/xn--meh.cf/public_html".$file)){ 
 	?>
 	<link href=\'https://fonts.googleapis.com/css?family=Abel\' rel=\'stylesheet\' type=\'text/css\'>
 	<style>
@@ -61,8 +61,7 @@ if(!strstr($request, "true")){
 	<div align="center">
 		'.$_POST['content'].'
 	</div>
-    <?php }
-}';
+    <?php }}';
 		fwrite($myfile, $content);
 		fclose($myfile);
 	}
@@ -81,6 +80,7 @@ if(!strstr($request, "true")){
 <meta name="author" content="Maximilian Mitchell">
 <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="clipboard.js-master/dist/clipboard.min.js"></script>
 <?php include_once("analyticstracking.php") ?>
 <style>
 *{
@@ -133,6 +133,21 @@ $(document).ready(function() {
 		//for phone
 		window.scrollTo(0, 0);
 	});
+	
+	$(".url").click(function() {
+        var clipboard =	new Clipboard(".url", {
+		  text: function(trigger) {
+			return $("url").text(); 
+		  }
+		});
+		clipboard.on('success', function(e) {
+			alert("Copied");
+		});
+		
+		clipboard.on('error', function(e) {
+			alert("Error");
+		});
+    });
 });
 </script>
 </head>
@@ -149,7 +164,7 @@ $(document).ready(function() {
             <!-- if from crypter.co.uk -->
             <textarea name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Password: ".generateRandomString(15);}?></textarea> 
             <div class="g-recaptcha" data-sitekey="6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk"></div><br />
-            <input type="submit" name="submit" value="Create Link"> 
+            <input st type="submit" name="submit" value="Create Link">
         </div>
     </form>
 </body>
