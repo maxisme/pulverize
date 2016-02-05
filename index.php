@@ -7,7 +7,7 @@ function generateRandomString($length = 5) {
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
 	return $randomString;
-}
+} 
 //post
 if(isset($_POST['submit'])) 
 {
@@ -59,7 +59,7 @@ if(!strstr($request, "true")){
 	}
 	</style>
 	<div align="center">
-		'.$_POST['content'].'
+		'.htmlspecialchars(strip_tags($_POST['content'])).'
 	</div>
     <?php }}';
 		fwrite($myfile, $content);
@@ -73,14 +73,14 @@ if(!strstr($request, "true")){
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>✕</title>
-<meta name="description" content="Simply enter a string(text) and find the length(amount of characters).">
-<meta name="keywords" content="string, length, how many letters, charachters, letters, string length, strlen,">
+<meta name="description" content="SEND SELF DESTRUCTING MESSAGES.">
+<meta name="keywords" content="">
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 <meta name="author" content="Maximilian Mitchell">
 <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="clipboard.js-master/dist/clipboard.min.js"></script>
+<script src="clipboard.js"></script>
 <?php include_once("analyticstracking.php") ?>
 <style>
 *{
@@ -134,20 +134,16 @@ $(document).ready(function() {
 		window.scrollTo(0, 0);
 	});
 	
-	$(".url").click(function() {
-        var clipboard =	new Clipboard(".url", {
-		  text: function(trigger) {
-			return $("url").text(); 
-		  }
-		});
-		clipboard.on('success', function(e) {
-			alert("Copied");
-		});
-		
-		clipboard.on('error', function(e) {
-			alert("Error");
-		});
-    });
+	var clipboard = new Clipboard('#copy', {
+		text: function(trigger) {
+			return $("#url").text();
+		}
+	});
+	
+	clipboard.on('success', function(e) {
+		$("#copy").hide();
+	});
+
 });
 </script>
 </head>
@@ -157,7 +153,7 @@ $(document).ready(function() {
 	<form method="post" action="/" >
         <div align="center">
         <?php if($page){?>
-            <span id='sendLink'>Link to message:<span id="url">⊗.cf/<?php echo $page?></span></span><br /><br />
+            <span id='sendLink'>Link to message:<span id="url">⊗.cf/<?php echo $page?></span> <img id="copy" src="paper42.svg" height="20px" /></span><br /><br />
         <?php }?>
             <br> 
             <span style="font-size:40px">Write a self destructing message:</span>
@@ -169,3 +165,4 @@ $(document).ready(function() {
     </form>
 </body>
 </html>
+
