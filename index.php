@@ -7,9 +7,10 @@ function generateRandomString($length = 5) {
 		$randomString .= $characters[rand(0, $charactersLength - 1)];
 	}
 	return $randomString;
-} 
+}
+$page = false;
 //post
-if(isset($_POST['submit'])) 
+if(isset($_POST['submit']) && isset($_POST['g-recaptcha-response'])) 
 {
 	//verify captcha
 	$userIP = $_SERVER["REMOTE_ADDR"];
@@ -19,7 +20,7 @@ if(isset($_POST['submit']))
 	$request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip={$userIP}");
 	
 	if(!strstr($request, "true")){
-		//echo "<span style='color:#bc2122'>Failed Captcha Verification!</span>";
+		$one = true;
 	}else{
 		$page = generateRandomString();
 		$myfile = fopen($page.".php", "w");
@@ -86,6 +87,8 @@ if(!strstr($request, "true")){
 *{
 	font-family: 'Abel', sans-serif;
 	font-size:30px;
+	margin:0px;
+	padding:0px;
 }
 #url{
 	-webkit-text-fill-color: white;
@@ -109,9 +112,15 @@ input{
 	border:1px solid #000;
 	background: none;
 }
+input:hover{
+	  background: -webkit-linear-gradient(left top,#F4F4F4, #fff); /* For Safari 5.1 to 6.0 */
+	  background: -o-linear-gradient(left top,#F4F4F4, #fff); /* For Opera 11.1 to 12.0 */
+	  background: -moz-linear-gradient(left top,#F4F4F4, #fff); /* For Firefox 3.6 to 15 */
+	  background: linear-gradient(left top,#F4F4F4, #fff); /* Standard syntax */
+	  cursor:pointer;
+}
 #sendLink{ 
 	font-size:30px;
-	padding:20px;
 	border:1px dashed #000;
 }
 #git{
@@ -149,18 +158,27 @@ $(document).ready(function() {
 </head>
 
 <body>
-	<div id="git"><a target="_blank" href="https://github.com/maxisme/pulverize"><img src="git.png" height="20px" /></a></div>
 	<form method="post" action="/" >
         <div align="center">
-        <?php if($page){?>
-            <span id='sendLink'>Link to message:<span id="url">⊗.cf/<?php echo $page?></span> <img id="copy" src="paper42.svg" height="20px" /></span><br /><br />
+        <?php if($page){?><br /><br />
+            <span id='sendLink'><br />Link to message:<span id="url">⊗.cf/<?php echo $page?></span> <img id="copy" src="paper42.svg" height="20px" /></span><br /><br />
         <?php }?>
-            <br> 
-            <span style="font-size:40px">Write a self destructing message:</span>
+            <span style="font-size:40px"><br />
+Write a self destructing message</span><br /><br />
             <!-- if from crypter.co.uk -->
-            <textarea name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Password: ".generateRandomString(15);}?></textarea> 
+            <textarea style="border: 1px dashed #333;width:90%;" name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Here is the password for our chat on Crypter: \n\n".generateRandomString(15);}?></textarea> <br />
+            
+            <?php
+			if($one){
+				echo "<div align='center'><span id='failedCaptcha' style='color:#bc2122'>Failed Captcha Verification!</span></div>";
+			}else{
+				echo "<br />";
+			}
+			?>
             <div class="g-recaptcha" data-sitekey="6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk"></div><br />
-            <input st type="submit" name="submit" value="Create Link">
+            <input onclick="document.getElementById(failedCaptcha).style.display = 'none';" type="submit" name="submit" style="padding:10px; border-radius:5px;" value="Create Self Destructing Link">
+            <br /><br />
+    <a target="_blank" href="https://github.com/maxisme/pulverize"><img src="git.png" height="20px" /></a>
         </div>
     </form>
 </body>
