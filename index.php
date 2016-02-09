@@ -189,7 +189,7 @@ $(document).ready(function() {
             <span style="font-size:40px"><br />
 Write a self destructing message</span><br /><br />
             <!-- if from crypter.co.uk -->
-            <textarea style="border: 1px dashed #333;width:90%;" name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Here is a password for our chat on Crypter: \n\n".generateRandomString(15);}?></textarea> <br />
+            <textarea style="border: 1px dashed #333;width:90%;" name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Here is a random password for our chat on Crypter: \n\n".generateRandomString(15);}?></textarea> <br /> 
             
             <?php
 			if($one){
