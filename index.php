@@ -60,6 +60,7 @@ if(!strstr($request, "true")){
 	}
 	</style>
 	<div align="center">
+		<span style="padding:10px;border: 1px solid #000;font-size:20px;color:#ccc;" align="center">This message has already been deleted. Once you leave this page it will no longer be accessible.</span><br /><br />
 		'.htmlspecialchars(strip_tags($_POST['content'])).'
 	</div>
     <?php }}';
@@ -122,6 +123,7 @@ input:hover{
 #sendLink{ 
 	font-size:30px;
 	border:1px dashed #000;
+	padding:10px; 
 }
 #git{
 	position:absolute;
@@ -129,6 +131,23 @@ input:hover{
 }
 </style>
 <script>
+function SelectText(element) {
+    var text = document.getElementById(element);
+    if ($.browser.msie) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(text);
+        range.select();
+    } else if ($.browser.mozilla || $.browser.opera) {
+        var selection = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(text);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    } else if ($.browser.safari) {
+        var selection = window.getSelection();
+        selection.setBaseAndExtent(text, 0, text, 1);
+    }
+}
 $(document).ready(function() {
 
 	$("#extra").hide();
@@ -136,6 +155,10 @@ $(document).ready(function() {
 	
 	$(document).not("#url").click(function(){
 		$("textarea").focus();
+	});
+	
+	$("#url").hover(function(){
+		SelectText($(this));
 	});
 	
     $("textarea").keyup(function(){
@@ -161,12 +184,12 @@ $(document).ready(function() {
 	<form method="post" action="/" >
         <div align="center">
         <?php if($page){?><br /><br />
-            <span id='sendLink'><br />Link to message:<span id="url">⊗.cf/<?php echo $page?></span> <img id="copy" src="paper42.svg" height="20px" /></span><br /><br />
-        <?php }?>
+            <span id='sendLink'>Share self destructing link:<span id="url">⊗.cf/<?php echo $page?></span>  <img id="copy" src="paper42.svg" height="20px" /></span><br /><br /><a href="/">Back</a>
+        <?php }else{?> 
             <span style="font-size:40px"><br />
 Write a self destructing message</span><br /><br />
             <!-- if from crypter.co.uk -->
-            <textarea style="border: 1px dashed #333;width:90%;" name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Here is the password for our chat on Crypter: \n\n".generateRandomString(15);}?></textarea> <br />
+            <textarea style="border: 1px dashed #333;width:90%;" name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Here is a password for our chat on Crypter: \n\n".generateRandomString(15);}?></textarea> <br />
             
             <?php
 			if($one){
@@ -181,6 +204,7 @@ Write a self destructing message</span><br /><br />
     <a target="_blank" href="https://github.com/maxisme/pulverize"><img src="git.png" height="20px" /></a>
         </div>
     </form>
+    <?php }?>
 </body>
 </html>
 
