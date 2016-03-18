@@ -15,7 +15,7 @@ if(isset($_POST['submit']) && isset($_POST['g-recaptcha-response']))
 	//verify captcha
 	$userIP = $_SERVER["REMOTE_ADDR"];
 	$recaptchaResponse = $_POST['g-recaptcha-response'];
-	$config = parse_ini_file('/NAS/pulverize.xyz/db.ini');
+	$config = parse_ini_file('/var/www/pulverize.xyz/db.ini');
 	$secretKey = $config['secret'];
 	$request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}&remoteip={$userIP}");
 	
@@ -33,24 +33,39 @@ $request = file_get_contents("https://www.google.com/recaptcha/api/siteverify?se
 if(!strstr($request, "true")){
 	//show recaptcha
 	?>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<link href=\'https://fonts.googleapis.com/css?family=Abel\' rel=\'stylesheet\' type=\'text/css\'>
 	<style>
 	*{
 		font-family: \'Abel\', sans-serif;
 		font-size:30px;
 	}
-	</style>
-	<script src=\'https://www.google.com/recaptcha/api.js\'></script>
+	</style><script type="text/javascript">
+	var onloadCallback = function() {
+	  grecaptcha.render(\'html_element\', {
+		\'sitekey\' : \'6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk\',
+		\'callback\' : function(response) {
+		  if(response){
+			  $("#submit").click();
+		  }else{
+			  grecaptcha.reset();
+		  }
+		}
+	  });
+	};
+	</script>
     Please verify you are not a cheeky robot.
     <form  method="post" action="<?php echo $_SERVER[\'PHP_SELF\']; ?>" >
-        <div class="g-recaptcha" data-sitekey="6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk"></div>
-        <input type="submit" name="submit" value="Submit">
+        <div id="html_element"></div>
+        <input type="submit" id="submit" name="submit" style="visibility:hidden" value="Submit">
     </form>
-    
-<?php 
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
+<?php
 }else{
 	$file = $_SERVER[\'PHP_SELF\'];
-	if($file != "index.php" && unlink("/NAS/xn--meh.cf/public_html".$file)){ 
+	if($file != "index.php" && unlink("/var/www/pulverize.xyz/public_html".$file)){ 
 	?>
 	<link href=\'https://fonts.googleapis.com/css?family=Abel\' rel=\'stylesheet\' type=\'text/css\'>
 	<style>
@@ -60,10 +75,11 @@ if(!strstr($request, "true")){
 	}
 	</style>
 	<div align="center">
-		<span style="padding:10px;border: 1px solid #000;font-size:20px;color:#ccc;" align="center">This message has already been deleted. Once you leave this page it will no longer be accessible.</span><br /><br />
+		<span style="padding:10px;border: 1px solid #000;font-size:20px;color:#ccc;" align="center">This message has already been destroyed. Once you leave this page it will no longer be accessible.</span><br /><br />
 		'.htmlspecialchars(strip_tags($_POST['content'])).'
 	</div>
-    <?php }}';
+    <?php }
+	}';
 		fwrite($myfile, $content);
 		fclose($myfile);
 	}
@@ -77,7 +93,6 @@ if(!strstr($request, "true")){
 <title>✕</title>
 <meta name="description" content="SEND SELF DESTRUCTING MESSAGES.">
 <meta name="keywords" content="">
-<script src='https://www.google.com/recaptcha/api.js'></script>
 <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 <meta name="author" content="Maximilian Mitchell">
 <link href='https://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
@@ -130,7 +145,26 @@ input:hover{
 	right:5px;
 }
 </style>
-<script>
+<script type="text/javascript">
+var onloadCallback = function() {
+  grecaptcha.render('html_element', {
+	'sitekey' : '6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk',
+	'callback' : function(response) {
+	  if(response){
+		  if($("#check").is(':checked')){
+		  		$("#submit").click();
+		  }else{
+			  $("#failedCaptcha").html("Please confirm that you agree to the Ts & Cs.");
+			  grecaptcha.reset();
+		  }
+	  }else{
+	  	  $("#failedCaptcha").html("Failed Captcha Verification!");
+		  grecaptcha.reset();
+	  }
+	}
+  });
+};
+
 function SelectText(element) {
     var text = document.getElementById(element);
     if ($.browser.msie) {
@@ -175,9 +209,23 @@ $(document).ready(function() {
 	clipboard.on('success', function(e) {
 		$("#copy").hide();
 	});
-
+	
+	function checkChecked(){
+		if($("#check").is(':checked')){
+			$("#html_element").prop('disabled', false);
+		}else{
+			$("#html_element").prop('disabled', true);
+		}
+	}
+	checkChecked();
+	
+	$("#check").change(function() {
+        checkChecked();
+    });
+	
 });
-</script>
+</script> 
+
 </head>
 
 <body>
@@ -191,20 +239,27 @@ Write a self destructing message</span><br /><br />
             <!-- if from crypter.co.uk -->
             <textarea style="border: 1px dashed #333;width:90%;" name="content" rows="8"><?php if(isset($_GET["crypter"])){ echo "Here is a random password for our chat on Crypter: \n\n".generateRandomString(15);}?></textarea> <br /> 
             
+            <div align='center'><span id='failedCaptcha' style='color:#bc2122'>
             <?php
 			if($one){
-				echo "<div align='center'><span id='failedCaptcha' style='color:#bc2122'>Failed Captcha Verification!</span></div>";
-			}else{
-				echo "<br />";
+				echo "Failed Captcha Verification!";
 			}
 			?>
-            <div class="g-recaptcha" data-sitekey="6Ld98RYTAAAAALao0zkGHCEYDL6dV0CojDK-QgVk"></div><br />
-            <input onclick="document.getElementById(failedCaptcha).style.display = 'none';" type="submit" name="submit" style="padding:10px; border-radius:5px;" value="Create Self Destructing Link">
-            <br /><br />
-    <a target="_blank" href="https://github.com/maxisme/pulverize"><img src="git.png" height="20px" /></a>
+            </span></div>
+           
+            <span style="font-size:10px;"><br /><input id="check" type="checkbox" /> I accept the <a style="font-size:10px;" target="_blank" href="terms.php">Terms Of Service</a></span><br /><br />
+           	<div id="html_element"></div>
+           
+            <input id="submit" onclick="" type="submit" name="submit" style="padding:10px; visibility:hidden; border-radius:5px;" value="Create Self Destructing Link">
+             <div align="center">
+    <a target="_blank" href="https://github.com/maxisme/pulverize"><img style="position:relative;top:-40px;" src="git.png" height="20px" /></a>
+   			 </div>
         </div>
-    </form>
+    </form> 
     <?php }?>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
 </body>
 </html>
 
